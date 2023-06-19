@@ -9,7 +9,7 @@ resource "ibm_container_addons" "addons" {
     parameters_json = <<PARAMETERS_JSON
     {
         "osdSize":"200Gi",
-        "numOfOsd":"2",
+        "numOfOsd":"1",
         "osdStorageClassName":"ibmc-vpc-block-metro-10iops-tier",
         "odfDeploy":"true"
     }
