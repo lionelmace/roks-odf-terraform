@@ -1,0 +1,39 @@
+# Node.js
+node_modules
+
+# Cloud Foundry
+vcap-local.json
+
+# Local Values
+**/*.pem
+**/*.crt
+**/.terraform/*
+cloud/certificate
+cloud/chart/mytodo/local-values.yaml
+credentials.env
+cloud/kubernetes/imagePullSecret.json
+cloud/kubernetes/ingress-tls-rewrite.yaml
+# cloud/kubernetes/mytodo.yaml
+cloud/kubernetes/mytodo-ocp.yaml
+cloud/kubernetes/mytodo-ns.yaml
+cloud/terraform-old
+
+# Miscellaneous
+**/*.txt
+.editorconfig
+
+# Ignore tekton for now
+**/tekton/*
+
+# Local .terraform directories
+**/.terraform/*
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.terraform.lock.hcl
+# Exclude all .tfvars files, which are likely to contain sentitive data, such as
+# password, private keys, and other secrets. These should not be part of version
+# control as they are data points which are potentially sensitive and subject
+# to change depending on the environment.
+#
+# *.tfvars
