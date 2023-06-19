@@ -127,7 +127,7 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
   vpc_id            = ibm_is_vpc.vpc.id
   resource_group_id = ibm_resource_group.group.id
   # Optional: Specify Kubes version. If not included, default version is used
-  kube_version = var.openshift_version == "" ? "4.12_openshift" : var.openshift_version
+  kube_version                    = var.openshift_version == "" ? "4.12_openshift" : var.openshift_version
   cos_instance_crn                = var.is_openshift_cluster ? ibm_resource_instance.cos_openshift_registry[0].id : null
   entitlement                     = var.entitlement
   tags                            = var.tags
@@ -172,20 +172,6 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
 #       subnet_id = zones.value.id
 #     }
 #   }
-# }
-
-# Retrieve VPC LB attached to the cluster
-##############################################################################
-# data "ibm_container_vpc_cluster" "roks_cluster" {
-#   name = ibm_container_vpc_cluster.roks_cluster.id
-# }
-
-# data "ibm_container_vpc_alb" "roks_cluster_alb" {
-#   alb_id = data.ibm_container_vpc_cluster.roks_cluster.albs[0].id
-# }
-
-# output "roks_cluster_alb" {
-#   value = data.ibm_container_vpc_alb.roks_cluster_alb
 # }
 
 
