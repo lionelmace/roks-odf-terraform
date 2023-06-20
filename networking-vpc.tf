@@ -43,16 +43,18 @@ variable "vpc_cidr_blocks" {
   description = "List of CIDR blocks for Address Prefix"
   default = [
     "10.243.0.0/18",
-    "10.243.64.0/18",
-  "10.243.128.0/18"]
+  #   "10.243.64.0/18",
+  # "10.243.128.0/18"
+  ]
 }
 
 variable "subnet_cidr_blocks" {
   description = "List of CIDR blocks for subnets"
   default = [
     "10.243.0.0/24",
-    "10.243.64.0/24",
-  "10.243.128.0/24"]
+  #   "10.243.64.0/24",
+  # "10.243.128.0/24"
+  ]
 }
 
 variable "vpc_enable_public_gateway" {
@@ -87,7 +89,8 @@ resource "ibm_is_vpc" "vpc" {
 
 resource "ibm_is_vpc_address_prefix" "address_prefix" {
 
-  count = 3
+  # count = 3
+  count = 1
   name  = "${local.basename}-prefix-zone-${count.index + 1}"
   zone  = "${var.region}-${(count.index % 3) + 1}"
   vpc   = ibm_is_vpc.vpc.id
@@ -101,7 +104,8 @@ resource "ibm_is_vpc_address_prefix" "address_prefix" {
 
 resource "ibm_is_public_gateway" "pgw" {
 
-  count          = var.vpc_enable_public_gateway ? 3 : 0
+  # count          = var.vpc_enable_public_gateway ? 3 : 0
+  count          = var.vpc_enable_public_gateway ? 1 : 0
   name           = "${local.basename}-pgw-${count.index + 1}"
   vpc            = ibm_is_vpc.vpc.id
   zone           = "${var.region}-${count.index + 1}"
@@ -138,7 +142,8 @@ resource "ibm_is_network_acl" "multizone_acl" {
 
 resource "ibm_is_subnet" "subnet" {
 
-  count           = 3
+  # count           = 3
+  count           = 1
   name            = "${local.basename}-subnet-${count.index + 1}"
   vpc             = ibm_is_vpc.vpc.id
   zone            = "${var.region}-${count.index + 1}"
