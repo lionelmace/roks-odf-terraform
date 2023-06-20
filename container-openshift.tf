@@ -23,7 +23,8 @@ variable "openshift_machine_flavor" {
 variable "openshift_worker_nodes_per_zone" {
   description = "The number of worker nodes per zone in the default worker pool."
   type        = number
-  default     = 1
+  # default     = 1
+  default     = 2
 }
 
 variable "worker_labels" {
