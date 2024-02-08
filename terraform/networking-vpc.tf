@@ -44,8 +44,7 @@ variable "vpc_cidr_blocks" {
   default = [
     "10.243.0.0/18",
     "10.243.64.0/18",
-    "10.243.128.0/18"
-  ]
+  "10.243.128.0/18"]
 }
 
 variable "subnet_cidr_blocks" {
@@ -53,8 +52,7 @@ variable "subnet_cidr_blocks" {
   default = [
     "10.243.0.0/24",
     "10.243.64.0/24",
-    "10.243.128.0/24"
-  ]
+  "10.243.128.0/24"]
 }
 
 variable "vpc_enable_public_gateway" {
@@ -78,8 +76,11 @@ resource "ibm_is_vpc" "vpc" {
   address_prefix_management   = var.vpc_address_prefix_management
   default_security_group_name = "${local.basename}-vpc-sg"
   default_network_acl_name    = "${local.basename}-vpc-acl"
-  classic_access              = var.vpc_classic_access
-  tags                        = var.tags
+  # Delete all rules attached to default security group and default network ACL
+  # for a new VPC. This attribute has no impact on update. Default = false
+  # no_sg_acl_rules             = true
+  classic_access = var.vpc_classic_access
+  tags           = var.tags
 }
 
 
@@ -89,7 +90,7 @@ resource "ibm_is_vpc" "vpc" {
 
 resource "ibm_is_vpc_address_prefix" "address_prefix" {
 
-  count = 3
+  count = length(var.vpc_cidr_blocks)
   name  = "${local.basename}-prefix-zone-${count.index + 1}"
   zone  = "${var.region}-${(count.index % 3) + 1}"
   vpc   = ibm_is_vpc.vpc.id
@@ -103,11 +104,12 @@ resource "ibm_is_vpc_address_prefix" "address_prefix" {
 
 resource "ibm_is_public_gateway" "pgw" {
 
-  count          = var.vpc_enable_public_gateway ? 3 : 0
+  count          = var.vpc_enable_public_gateway ? length(var.subnet_cidr_blocks) : 0
   name           = "${local.basename}-pgw-${count.index + 1}"
   vpc            = ibm_is_vpc.vpc.id
   zone           = "${var.region}-${count.index + 1}"
   resource_group = ibm_resource_group.group.id
+  tags           = var.tags
 }
 
 
@@ -140,7 +142,7 @@ resource "ibm_is_network_acl" "multizone_acl" {
 
 resource "ibm_is_subnet" "subnet" {
 
-  count           = 3
+  count           = length(var.subnet_cidr_blocks)
   name            = "${local.basename}-subnet-${count.index + 1}"
   vpc             = ibm_is_vpc.vpc.id
   zone            = "${var.region}-${count.index + 1}"
@@ -148,6 +150,7 @@ resource "ibm_is_subnet" "subnet" {
   network_acl     = ibm_is_network_acl.multizone_acl.id
   public_gateway  = var.vpc_enable_public_gateway ? element(ibm_is_public_gateway.pgw.*.id, count.index) : null
   tags            = var.tags
+  resource_group  = ibm_resource_group.group.id
 
   depends_on = [ibm_is_vpc_address_prefix.address_prefix]
 }

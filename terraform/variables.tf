@@ -2,6 +2,13 @@
 # Account Variables
 ##############################################################################
 
+variable "ibmcloud_api_key" {
+  description = "APIkey that's associated with the account to provision resources to"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
 variable "prefix" {
   type        = string
   default     = ""
@@ -19,18 +26,27 @@ locals {
   basename = lower(var.prefix == "" ? "odf-${random_string.random.0.result}" : var.prefix)
 }
 
-resource "ibm_resource_group" "group" {
-  name = "${local.basename}-group"
-  tags = var.tags
-}
-
 variable "region" {
   description = "IBM Cloud region where all resources will be provisioned (e.g. eu-de)"
   default     = "eu-de"
 }
 
+variable "icr_region" {
+  description = "IBM Container Registry Region (e.g. de.icr.io)"
+  default     = "de.icr.io"
+}
+
 variable "tags" {
   description = "List of Tags"
   type        = list(string)
-  default     = ["tf", "cn"]
+  default     = ["tf", "icn"]
+}
+
+# Account ID is required for CBR (Context Based Restrictions) and SCC scope
+##############################################################################
+data "ibm_iam_auth_token" "tokendata" {}
+data "ibm_iam_account_settings" "account_settings" {}
+
+locals {
+  account_id = data.ibm_iam_account_settings.account_settings.account_id
 }

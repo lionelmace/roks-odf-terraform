@@ -47,7 +47,7 @@ variable "openshift_wait_till" {
   }
 }
 
-variable "disable_public_service_endpoint" {
+variable "openshift_disable_public_service_endpoint" {
   description = "Boolean value true if Public service endpoint to be disabled."
   type        = bool
   default     = false
@@ -126,12 +126,12 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
   name              = format("%s-%s", local.basename, var.openshift_cluster_name)
   vpc_id            = ibm_is_vpc.vpc.id
   resource_group_id = ibm_resource_group.group.id
-  # Optional: Specify Kubes version. If not included, default version is used
-  kube_version                    = var.openshift_version == "" ? "4.12_openshift" : var.openshift_version
+  # Optional: Specify OpenShift version. If not included, 4.14 is used
+  kube_version                    = var.openshift_version == "" ? "4.14_openshift" : var.openshift_version
   cos_instance_crn                = var.is_openshift_cluster ? ibm_resource_instance.cos_openshift_registry[0].id : null
   entitlement                     = var.entitlement
   tags                            = var.tags
-  disable_public_service_endpoint = var.disable_public_service_endpoint
+  disable_public_service_endpoint = var.openshift_disable_public_service_endpoint
   update_all_workers              = var.openshift_update_all_workers
 
   flavor       = var.openshift_machine_flavor
@@ -146,12 +146,14 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
     }
   }
 
-  # Require a Key Protect Instance
-  # kms_config {
-  #   instance_id      = ibm_resource_instance.key-protect.guid # GUID of Key Protect instance
-  #   crk_id           = ibm_kms_key.key.key_id                 # ID of customer root key
-  #   private_endpoint = true
-  # }
+  kms_config {
+    instance_id      = ibm_resource_instance.key-protect.guid # GUID of Key Protect instance
+    crk_id           = ibm_kms_key.key.key_id                 # ID of customer root key
+    private_endpoint = true
+  }
+  depends_on = [
+    ibm_iam_authorization_policy.roks-kms
+  ]
 }
 
 # Additional Worker Pool
@@ -208,12 +210,12 @@ resource "ibm_resource_instance" "cos_openshift_registry" {
 # Integrating Logging requires the master node to be 'Ready'
 # If not, you will face a timeout error after 45mins
 ##############################################################################
-# resource "ibm_ob_logging" "openshift_log_connect" {
-#   depends_on       = [module.logging_instance.key_guid]
-#   cluster          = ibm_container_vpc_cluster.roks_cluster.id
-#   instance_id      = module.logging_instance.guid
-#   private_endpoint = var.log_private_endpoint
-# }
+resource "ibm_ob_logging" "openshift_log_connect" {
+  depends_on       = [module.log_analysis.key_guid]
+  cluster          = ibm_container_vpc_cluster.roks_cluster.id
+  instance_id      = module.log_analysis.guid
+  private_endpoint = var.log_private_endpoint
+}
 
 ##############################################################################
 # Connect Monitoring Service to cluster
@@ -221,9 +223,21 @@ resource "ibm_resource_instance" "cos_openshift_registry" {
 # Integrating Monitoring requires the master node to be 'Ready'
 # If not, you will face a timeout error after 45mins
 ##############################################################################
-# resource "ibm_ob_monitoring" "openshift_connect_monitoring" {
-#   depends_on       = [module.monitoring_instance.key_guid]
-#   cluster          = ibm_container_vpc_cluster.roks_cluster.id
-#   instance_id      = module.monitoring_instance.guid
-#   private_endpoint = var.sysdig_private_endpoint
-# }
+resource "ibm_ob_monitoring" "openshift_connect_monitoring" {
+  depends_on       = [module.cloud_monitoring.key_guid]
+  cluster          = ibm_container_vpc_cluster.roks_cluster.id
+  instance_id      = module.cloud_monitoring.guid
+  private_endpoint = var.sysdig_private_endpoint
+}
+
+# IAM AUTHORIZATIONS
+##############################################################################
+
+# Authorization policy between OpenShift and Key Protect
+# Require to encrypt OpenShift with Key in Key Protect
+resource "ibm_iam_authorization_policy" "roks-kms" {
+  source_service_name         = "containers-kubernetes"
+  target_service_name         = "kms"
+  target_resource_instance_id = ibm_resource_instance.key-protect.guid
+  roles                       = ["Reader"]
+}

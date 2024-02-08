@@ -2,7 +2,8 @@
 ## Global Variables
 ##############################################################################
 
-#region                = "eu-de" # eu-de for Frankfurt MZR
+#region     = "eu-de"     # eu-de for Frankfurt MZR
+#icr_region = "de.icr.io"
 
 ##############################################################################
 ## VPC
@@ -21,3 +22,21 @@ openshift_machine_flavor = "bx2.16x64" # ODF Flavors
 # Available values: MasterNodeReady, OneWorkerNodeReady, or IngressReady
 openshift_wait_till          = "OneWorkerNodeReady"
 openshift_update_all_workers = false
+
+
+##############################################################################
+## COS
+##############################################################################
+cos_plan   = "standard"
+cos_region = "global"
+
+
+##############################################################################
+## Observability: Log Analysis (Mezmo) & Monitoring (Sysdig)
+##############################################################################
+# Available Plans: lite, 7-day, 14-day, 30-day
+log_plan                 = "7-day"
+log_enable_platform_logs = false
+
+sysdig_plan                    = "graduated-tier"
+sysdig_enable_platform_metrics = false
