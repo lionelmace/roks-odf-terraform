@@ -35,25 +35,3 @@ resource "ibm_iam_access_group_policy" "policy-k8s-identity-administrator" {
     service = "iam-identity"
   }
 }
-
-# AUTHORIZATIONS
-##############################################################################
-
-# Authorization policy between OpenShift and Secrets Manager
-# resource "ibm_iam_authorization_policy" "roks-sm" {
-#   source_service_name         = "containers-kubernetes"
-#   source_resource_instance_id = module.vpc_openshift_cluster.vpc_openshift_cluster_id
-#   target_service_name         = "secrets-manager"
-#   target_resource_instance_id = ibm_resource_instance.secrets-manager.guid
-#   roles                       = ["Manager"]
-# }
-
-# Authorization policy between COS Bucket (Source) and Key Protect (Target)
-# Required to encrypt COS buckets
-resource "ibm_iam_authorization_policy" "iam-auth-kms-cos" {
-  source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = ibm_resource_instance.cos.guid
-  target_service_name         = "kms"
-  target_resource_instance_id = ibm_resource_instance.key-protect.guid
-  roles                       = ["Reader"]
-}
