@@ -130,6 +130,7 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
   kube_version                    = var.openshift_version == "" ? "4.14_openshift" : var.openshift_version
   cos_instance_crn                = var.is_openshift_cluster ? ibm_resource_instance.cos_openshift_registry[0].id : null
   entitlement                     = var.entitlement
+  force_delete_storage            = var.openshift_force_delete_storage
   tags                            = var.tags
   disable_public_service_endpoint = var.openshift_disable_public_service_endpoint
   update_all_workers              = var.openshift_update_all_workers
