@@ -58,7 +58,7 @@ resource "ibm_resource_key" "bucket-key" {
   name                 = "bucket-oadp-key"
   resource_instance_id = ibm_resource_instance.cos-oadp.id
   parameters           = { "HMAC" = true }
-  role                 = "Object, Reader, Manager"
+  role                 = "Object Reader, Object Writer, Manager"
 }
 
 # Authorization policy between COS Bucket (Source) and Key Protect (Target)
