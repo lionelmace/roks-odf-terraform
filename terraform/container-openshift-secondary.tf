@@ -58,7 +58,7 @@ variable "secondary_kms_config" {
   default = []
 }
 
-variable "entitlement" {
+variable "secondary_entitlement" {
   description = "Enable openshift entitlement during cluster creation ."
   type        = string
   default     = "cloud_pak"
@@ -123,7 +123,7 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
   # Optional: Specify OpenShift version. If not included, 4.14 is used
   kube_version                    = var.openshift_secondary_version == "" ? "4.14_openshift" : var.openshift_secondary_version
   cos_instance_crn                = var.is_openshift_secondary_cluster ? ibm_resource_instance.cos_openshift_secondary_registry[0].id : null
-  entitlement                     = var.entitlement
+  entitlement                     = var.secondary_entitlement
   force_delete_storage            = var.openshift_secondary_force_delete_storage
   tags                            = var.tags
   disable_public_service_endpoint = var.openshift_secondary_disable_public_service_endpoint
