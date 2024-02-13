@@ -53,3 +53,13 @@ resource "ibm_cos_bucket" "bucket-oadp" {
   }
   endpoint_type = "public"
 }
+
+# Authorization policy between COS Bucket (Source) and Key Protect (Target)
+# Required to encrypt COS buckets
+resource "ibm_iam_authorization_policy" "iam-auth-kms-cos" {
+  source_service_name         = "cloud-object-storage"
+  source_resource_instance_id = ibm_resource_instance.cos-scc.guid
+  target_service_name         = "kms"
+  target_resource_instance_id = ibm_resource_instance.key-protect.guid
+  roles                       = ["Reader"]
+}
