@@ -26,12 +26,6 @@ variable "openshift_secondary_worker_nodes_per_zone" {
   default     = 1
 }
 
-variable "worker_labels" {
-  description = "Labels on all the workers in the default worker pool."
-  type        = map(any)
-  default     = null
-}
-
 variable "openshift_secondary_wait_till" {
   description = "specify the stage when Terraform to mark the cluster creation as completed."
   type        = string
