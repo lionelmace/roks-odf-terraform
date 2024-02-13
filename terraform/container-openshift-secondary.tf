@@ -116,7 +116,7 @@ variable "secondary_worker_pools" {
 
 ## Resources
 ##############################################################################
-resource "ibm_container_vpc_cluster" "roks_cluster" {
+resource "ibm_container_vpc_cluster" "secondary_roks_cluster" {
   name              = format("%s-%s", local.basename, var.openshift_secondary_cluster_name)
   vpc_id            = ibm_is_vpc.vpc.id
   resource_group_id = ibm_resource_group.group.id
@@ -155,7 +155,7 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
 ##############################################################################
 # resource "ibm_container_vpc_worker_pool" "roks_worker_pools" {
 #   for_each          = { for pool in var.worker_pools : pool.pool_name => pool }
-#   cluster           = ibm_container_vpc_cluster.roks_cluster.id
+#   cluster           = ibm_container_vpc_cluster.secondary_roks_cluster.id
 #   resource_group_id = ibm_resource_group.group.id
 #   worker_pool_name  = each.key
 #   flavor            = lookup(each.value, "machine_type", null)
@@ -207,7 +207,7 @@ resource "ibm_resource_instance" "cos_openshift_secondary_registry" {
 ##############################################################################
 resource "ibm_ob_logging" "openshift_secondary_log_connect" {
   depends_on       = [module.log_analysis.key_guid]
-  cluster          = ibm_container_vpc_cluster.roks_cluster.id
+  cluster          = ibm_container_vpc_cluster.secondary_roks_cluster.id
   instance_id      = module.log_analysis.guid
   private_endpoint = var.log_private_endpoint
 }
@@ -220,7 +220,7 @@ resource "ibm_ob_logging" "openshift_secondary_log_connect" {
 ##############################################################################
 resource "ibm_ob_monitoring" "openshift_secondary_connect_monitoring" {
   depends_on       = [module.cloud_monitoring.key_guid]
-  cluster          = ibm_container_vpc_cluster.roks_cluster.id
+  cluster          = ibm_container_vpc_cluster.secondary_roks_cluster.id
   instance_id      = module.cloud_monitoring.guid
   private_endpoint = var.sysdig_private_endpoint
 }
