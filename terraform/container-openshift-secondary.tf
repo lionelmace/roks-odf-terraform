@@ -53,7 +53,7 @@ variable "openshift_secondary_force_delete_storage" {
   default     = true
 }
 
-variable "kms_config" {
+variable "secondary_kms_config" {
   type    = list(map(string))
   default = []
 }
