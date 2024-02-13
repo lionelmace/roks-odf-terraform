@@ -224,15 +224,3 @@ resource "ibm_ob_monitoring" "openshift_secondary_connect_monitoring" {
   instance_id      = module.cloud_monitoring.guid
   private_endpoint = var.sysdig_private_endpoint
 }
-
-# IAM AUTHORIZATIONS
-##############################################################################
-
-# Authorization policy between OpenShift and Key Protect
-# Require to encrypt OpenShift with Key in Key Protect
-resource "ibm_iam_authorization_policy" "roks-kms" {
-  source_service_name         = "containers-kubernetes"
-  target_service_name         = "kms"
-  target_resource_instance_id = ibm_resource_instance.key-protect.guid
-  roles                       = ["Reader"]
-}
