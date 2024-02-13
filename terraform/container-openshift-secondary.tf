@@ -75,7 +75,7 @@ variable "is_openshift_secondary_cluster" {
   default = true
 }
 
-variable "worker_pools" {
+variable "secondary_worker_pools" {
   description = "List of maps describing worker pools"
 
   type = list(object({
@@ -100,7 +100,7 @@ variable "worker_pools" {
   validation {
     error_message = "Worker pool names must match the regex `^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$`."
     condition = length([
-      for pool in var.worker_pools :
+      for pool in var.secondary_worker_pools :
       false if !can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", pool.pool_name))
     ]) == 0
   }
@@ -108,9 +108,9 @@ variable "worker_pools" {
   validation {
     error_message = "Worker pools cannot have duplicate names."
     condition = length(distinct([
-      for pool in var.worker_pools :
+      for pool in var.secondary_worker_pools :
       pool.pool_name
-    ])) == length(var.worker_pools)
+    ])) == length(var.secondary_worker_pools)
   }
 }
 
