@@ -54,12 +54,12 @@ resource "ibm_cos_bucket" "bucket-oadp" {
   endpoint_type = "public"
 }
 
-# resource "ibm_resource_key" "bucket-key" {
-#   name                 = "bucket-oadp-key"
-#   resource_instance_id = ibm_resource_instance.cos-oadp.id
-#   parameters           = { "HMAC" = true }
-#   role                 = "Object Reader, Object Writer, Manager"
-# }
+resource "ibm_resource_key" "bucket-key" {
+  name                 = "bucket-oadp-key"
+  resource_instance_id = ibm_resource_instance.cos-oadp.id
+  parameters           = { "HMAC" = true }
+  role                 = "ObjectReader, ObjectWriter, Manager"
+}
 
 # Authorization policy between COS Bucket (Source) and Key Protect (Target)
 # Required to encrypt COS buckets
