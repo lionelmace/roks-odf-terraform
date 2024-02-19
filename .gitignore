@@ -6,6 +6,9 @@
 # Miscellaneous
 **/*.txt
 
+# OADP
+**/oadp/*
+
 # Local .terraform directories
 **/.terraform/*
 # .tfstate files
