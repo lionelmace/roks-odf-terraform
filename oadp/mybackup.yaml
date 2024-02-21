@@ -1,0 +1,10 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: mybackup
+  namespace: openshift-adp
+spec:
+  includedNamespaces:
+  - default
+  snapshotVolumes: true
+  storageLocation: velero-sample-1

@@ -7,7 +7,7 @@
 **/*.txt
 
 # OADP
-**/oadp/*
+./oadp/ibmcos-bucket-mycreds.json
 
 # Local .terraform directories
 **/.terraform/*
