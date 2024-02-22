@@ -1,6 +1,6 @@
 # Install ODF (OpenShift Data Foundation)
 ##############################################################################
-resource "ibm_container_addons" "addons" {
+resource "ibm_container_addons" "odf-secondary" {
   cluster           = ibm_container_vpc_cluster.secondary_roks_cluster.id
   resource_group_id = ibm_resource_group.group.id
   addons {
