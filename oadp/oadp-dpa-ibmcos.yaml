@@ -16,7 +16,7 @@ spec:
         name: cloud-credentials
       default: true
       objectStorage:
-        bucket: odf-rglj9w-bucket-oadp #update this
+        bucket: odf-yskypp-bucket-oadp #update this
         prefix: velero
       provider: aws
   configuration:
