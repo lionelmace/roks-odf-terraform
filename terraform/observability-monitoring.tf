@@ -14,9 +14,9 @@ variable "sysdig_plan" {
 }
 
 variable "sysdig_service_endpoints" {
-  description = "Types of the service endpoints. Possible values are 'public', 'private', 'public-and-private'."
+  description = "Only allow the value public-and-private. Previouslly it incorrectly allowed values of public and private however it is not possible to create public only or private only Cloud Monitoring instances."
   type        = string
-  default     = "private"
+  default     = "public-and-private"
 }
 
 variable "sysdig_private_endpoint" {
