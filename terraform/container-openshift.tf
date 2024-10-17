@@ -53,6 +53,12 @@ variable "openshift_disable_public_service_endpoint" {
   default     = false
 }
 
+variable "openshift_disable_outbound_traffic_protection" {
+  description = "Include this option to allow public outbound access from the cluster workers."
+  type        = bool
+  default     = true
+}
+
 variable "openshift_force_delete_storage" {
   description = "force the removal of persistent storage associated with the cluster during cluster deletion."
   type        = bool
@@ -132,12 +138,15 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
   entitlement                     = var.entitlement
   force_delete_storage            = var.openshift_force_delete_storage
   tags                            = var.tags
-  disable_public_service_endpoint = var.openshift_disable_public_service_endpoint
   update_all_workers              = var.openshift_update_all_workers
 
   flavor       = var.openshift_machine_flavor
   worker_count = var.openshift_worker_nodes_per_zone
   wait_till    = var.openshift_wait_till
+
+  disable_public_service_endpoint = var.openshift_disable_public_service_endpoint
+  # By default, public outbound access is blocked in OpenShift versions as of 4.15
+  disable_outbound_traffic_protection = var.openshift_disable_outbound_traffic_protection
 
   dynamic "zones" {
     for_each = { for subnet in ibm_is_subnet.subnet : subnet.id => subnet }
