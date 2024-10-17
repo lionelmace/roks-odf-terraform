@@ -15,9 +15,9 @@ variable "openshift_version" {
 }
 
 variable "openshift_machine_flavor" {
-  description = " The default flavor of the OpenShift worker node."
+  description = " The default flavor of the OpenShift worker node for ODF"
   type        = string
-  default     = "bx2.4x16"
+  default     = "bx2.16x64"
 }
 
 variable "openshift_worker_nodes_per_zone" {
@@ -93,7 +93,7 @@ variable "worker_pools" {
   default = [
     {
       pool_name        = "dev"
-      machine_type     = "bx2.4x16"
+      machine_type     = "bx2.16x64"
       workers_per_zone = 1
       # },
       # {
@@ -126,8 +126,8 @@ resource "ibm_container_vpc_cluster" "roks_cluster" {
   name              = format("%s-%s", local.basename, var.openshift_cluster_name)
   vpc_id            = ibm_is_vpc.vpc.id
   resource_group_id = ibm_resource_group.group.id
-  # Optional: Specify OpenShift version. If not included, 4.14 is used
-  kube_version                    = var.openshift_version == "" ? "4.14_openshift" : var.openshift_version
+  # Optional: Specify OpenShift version. If not included, 4.16 is used
+  kube_version                    = var.openshift_version == "" ? "4.16_openshift" : var.openshift_version
   cos_instance_crn                = var.is_openshift_cluster ? ibm_resource_instance.cos_openshift_registry[0].id : null
   entitlement                     = var.entitlement
   force_delete_storage            = var.openshift_force_delete_storage

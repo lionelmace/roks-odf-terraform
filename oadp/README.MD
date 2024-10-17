@@ -4,7 +4,7 @@
 
 Tests have been made with
 
-* OpenShift version 4.14.8_1545
+* OpenShift version 4.16.x
 * Operator OADP 1.3.0 (Velero v1.12.1)
 * Operator VolSync
 

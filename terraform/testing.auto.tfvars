@@ -16,6 +16,7 @@ vpc_enable_public_gateway     = true
 ##############################################################################
 ## Cluster ROKS
 ##############################################################################
+openshift_version = "4.16_openshift"
 # openshift_machine_flavor = "bx2.4x16"
 openshift_machine_flavor = "bx2.16x64" # ODF Flavors
 
