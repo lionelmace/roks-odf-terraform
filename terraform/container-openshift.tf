@@ -102,7 +102,7 @@ module "ocp_base" {
   # Enable if using worker autoscaling. Stops Terraform managing worker count.
   ignore_worker_pool_size_changes = true
   addons = {
-    "cluster-autoscaler"  = { version = "1.2.3" }
+    # "cluster-autoscaler"  = { version = "1.2.3" }
     "vpc-file-csi-driver" = { version = "2.0" }  # 2.0 will enable latest driver version such as 2.0.16
     "openshift-data-foundation" = { version = "4.19.0" }
   }

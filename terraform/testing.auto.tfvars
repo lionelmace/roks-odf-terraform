@@ -14,4 +14,4 @@ disable_outbound_traffic_protection = true
 ##############################################################################
 ## Module Registry
 ##############################################################################
-namespace_region = "eu-de"
+# namespace_region = "eu-de"
