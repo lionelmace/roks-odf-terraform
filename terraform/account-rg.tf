@@ -1,13 +1,11 @@
+########################################################################################################################
+# Resource Group
+########################################################################################################################
 
-##############################################################################
-# Create a resource group or reuse an existing one
-##############################################################################
-
-resource "ibm_resource_group" "group" {
-  name = "${local.basename}-group"
-  tags = var.tags
-}
-
-output "resource_group_name" {
-  value = ibm_resource_group.group.name
+module "resource_group" {
+  source  = "terraform-ibm-modules/resource-group/ibm"
+  version = "1.4.0"
+  # if an existing resource group is not set (null) create a new one using prefix
+  resource_group_name          = var.resource_group == null ? "${var.prefix}-resource-group" : null
+  existing_resource_group_name = var.resource_group
 }
