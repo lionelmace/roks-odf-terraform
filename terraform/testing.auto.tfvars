@@ -16,12 +16,8 @@ vpc_enable_public_gateway     = true
 ##############################################################################
 ## Cluster ROKS
 ##############################################################################
-openshift_version = "4.16_openshift"
-
-# openshift_os             = "REDHAT_8_64"
-openshift_os             = "RHCOS"
-
-# openshift_machine_flavor = "bx2.4x16"
+openshift_version = "4.19_openshift"
+openshift_os      = "RHCOS"
 openshift_machine_flavor = "bx2.16x64" # ODF Flavors
 
 # Available values: MasterNodeReady, OneWorkerNodeReady, or IngressReady
@@ -44,11 +40,8 @@ cos_region = "global"
 
 
 ##############################################################################
-## Observability: Log Analysis (Mezmo) & Monitoring (Sysdig)
+## Observability: Monitoring (Sysdig)
 ##############################################################################
-# Available Plans: lite, 7-day, 14-day, 30-day
-log_plan                 = "7-day"
-log_enable_platform_logs = false
 
 sysdig_plan                    = "graduated-tier"
 sysdig_enable_platform_metrics = false
